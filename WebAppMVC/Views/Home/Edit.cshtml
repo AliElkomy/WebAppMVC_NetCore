@@ -1,0 +1,60 @@
+﻿@model WebAppMVC.Models.FoodItem
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>vwFoodItemCat</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" action="~/Home/UpdateFood" >
+            <div style="visibility:hidden">
+                <td> <input type="hidden" asp-for="FoodId" /></td>
+                <td><div asp-validation-summary="ModelOnly" class="text-danger"></div></td>
+            </div>
+            <table class="table table-bordered table-hover">
+              
+                <tr>
+                    <td><label asp-for="Name" class="control-label"></label></td>
+                    <td>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label asp-for="Description" class="control-label"></label></td>
+                    <td>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label asp-for="FoodCategoryId" class="control-label"></label></td>
+                    <td class="form-group align-content-md-start">
+                        <select id="FoodCat" class="btn btn-outline-info" asp-items=@ViewBag.Options asp-for=@Model.FoodCategoryId></select>
+                        @*<span asp-validation-for="FoodCategoryId" class="text-danger"></span>*@
+                    </td>
+                 @*       @Html.DropDownList("Category",ViewBag.Options,"Select",new{@class= "btn btn-primary"}) *@
+                    
+                    
+                </tr>
+            </table>
+            
+         
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" asp-action="UpdateFood" asp-controller="Home"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

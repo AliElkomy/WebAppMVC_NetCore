@@ -1,0 +1,1 @@
+﻿delete from FoodItems where Description is null

@@ -1,0 +1,140 @@
+﻿@model FoodItem;
+
+@{
+    <h2>Add Food Item</h2>
+    <div class="form">
+        <form action="~/Home/SaveFood" method="post">
+            <div class="container">
+                @if (!ViewData.ModelState.IsValid && ViewBag.ErrMsg == true)
+                {
+                    <div id="ErrorMsg" class="btn-toolbar alert-danger navbar-collapse" style="padding:10px;" role="modal">
+                        Enter Missing data
+                        <button style="float:right;" onclick="CloseErrMsg()">&times;</button>
+                    </div>
+                }
+              
+                <div class="card">
+                    <div class="card-header"> Add New food Item </div>
+                    <div class="card-body">
+                    <fieldset>
+                        @using(Html.BeginForm(FormMethod.Post,"Home/AddFood"))
+                            {
+                                @Html.AntiForgeryToken()
+                                //@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <table class="table table-bordered table-hover">
+                                    <tr>
+                                        <td> <label for="FoodName">Food Name</label></td>
+                                        <td>
+                                            @Html.TextBoxFor(s => Model.Name)
+                                            @Html.ValidationMessageFor(model => model.Name,"", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="FoodDesc">Description</label></td>
+                                        <td>
+                                            @Html.TextBoxFor(s => Model.Description)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="FoodCat">Category</label></td>
+                                        <td><select id="FoodCat" asp-items=@ViewBag.Options asp-for=@Model.FoodCategoryId></select></td>
+                                    </tr>
+                               
+                                </table>
+                            }
+                    </fieldset>
+                   
+                    </div>
+                </div>
+                <div class="card-footer" >
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Save" action="Home/SaveFood" formmethod="post" > 
+                        <input type="reset" class="btn btn-info" value="Reset">
+                        @Html.ActionLink("Back To Main","index","Home",null,new { @class= "btn btn-info", @style= "btn btn-info" }
+                    )
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Success Dialog-->
+    <div id="ModalSuccess" class="modal fade text-width:30%;" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Information</h2>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="SuccessMsg" class="modal-body alert alert-success">
+                    <!--here to put message-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script type="text/javascript"> 
+     
+    function CloseErrMsg(){
+        if (@ViewBag.ErrMsg == true)
+        {
+            document.getElementById("ErrorMsg").style.visibility = "hidden";
+            @ViewBag.ErrMsg = false
+        }
+    }
+
+    function OpenSuccessModal(Msg)
+    {
+        var MyDiv = document.getElementById("SuccessMsg");
+        MyDiv.innerHTML = Msg;
+        alert(msg);
+        $("#ModalSuccess").modal('show');
+    }
+
+    $(document).ready(function(){
+        var msg = "@TempData["SuccessMsg"]";
+        if(msg != ""){
+            OpenSuccessModal(msg);
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    //function closeErrorMsg() {
+    //    document.getElementById("ErrorMsg").style.height = '0';
+    //    e.preventDefault();
+    //}
+
+    //$(function () {
+    //    // hijax the form
+    //    $("form").submit(function (e) {
+    //        var $form = $(this);
+    //        var validator = $form.data("validator");
+
+    //        if (!validator || !$form.valid())
+    //            return;
+
+    //        e.preventDefault();
+
+    //        $.ajax({
+    //            url: "@Url.Action("index")",
+    //            type: "POST",
+    //            data: $form.serialize(),
+    //            statusCode: {
+    //                400: function (xhr, status, err) {
+    //                    var errors = $.parseJSON(err);
+    //                    validator.showErrors(errors);
+    //                }
+    //            },
+    //            success: function () {
+    //                // just reload the page for now
+    //                location.reload(true);
+    //            }
+    //        });
+    //    });
+
+    //});
+</script>
