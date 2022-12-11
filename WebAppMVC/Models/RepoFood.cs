@@ -58,7 +58,7 @@ namespace WebAppMVC.Models
 
         public  List<FoodItem> Find(string foodOrDesc) 
         {
-           return (foodOrDesc!= "") ?  DB.FoodItems.Where(s=> s.Name.Contains(foodOrDesc)).ToList() : null;
+           return (foodOrDesc!= "") ?  DB.FoodItems.Where(s=> s.Name.Contains(foodOrDesc) || s.Description.Contains(foodOrDesc)).ToList() : null;
               
         }
 

@@ -5,14 +5,15 @@
     <div class="form">
         <form action="~/Home/SaveFood" method="post">
             <div class="container">
-                @if (!ViewData.ModelState.IsValid && ViewBag.ErrMsg == true)
+
+                @if (TempData["ErrMsg"] != null && TempData["ErrMsg"].ToString() == "T")
                 {
-                    <div id="ErrorMsg" class="btn-toolbar alert-danger navbar-collapse" style="padding:10px;" role="modal">
-                        Enter Missing data
-                        <button style="float:right;" onclick="CloseErrMsg()">&times;</button>
+                    <div id="ErrorMsg" style="padding:10px; background-color:bisque; border:1px solid groove;border-radius:5px; " role="dialog">
+                        @TempData["ErrorMsg"].ToString()
+                        <button style="float:right" onclick=" document.getElementById('ErrorMsg').style.display='none';return false; ">&times;</button>
                     </div>
                 }
-              
+                              
                 <div class="card">
                     <div class="card-header"> Add New food Item </div>
                     <div class="card-body">

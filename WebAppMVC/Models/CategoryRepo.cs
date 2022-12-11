@@ -46,6 +46,11 @@ namespace WebAppMVC.Models
             DB.SaveChanges();
             throw new System.NotImplementedException();
         }
+
+        public List<Category> Find(string txt)
+        {
+            return (txt != "") ? DB.Categories.Where(s => s.CatName.Contains(txt) || s.Description.Contains(txt)).ToList() : null;
+        }
     }
 
     internal struct NewStruct

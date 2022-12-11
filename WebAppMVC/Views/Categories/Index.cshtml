@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WebAppMVC.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="form-group">
+    <form asp-controller="Categories" asp-action="Find" method="post">
+        <!-- Input and Submit elements -->
+        @Html.Label("Find")
+        <input type="text" name="txtFind" />
+        <input type="submit" value="Find" asp-action="Find" asp-controller="Categories" />
+        @* <a class="btn btn-outline-info" asp-controller="Home" asp-action="Find" onclick="return confirm('Are sure wants to delete?');">Find</a>*@
+
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CatName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CatName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CatId" class="btn btn-outline-primary">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CatId" class="btn btn-outline-info">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CatId" class="btn btn-outline-danger"> Delete</a> | 
+                <a asp-action="CatItems" asp-route-id="@item.CatId" class="btn btn-outline-primary"> Items</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@Html.ActionLink("Previous","PreviousPage","Categories",null,new { @class= "btn btn-info", @style= "btn btn-info"} )
+@Html.ActionLink("Next","NextPage","Categories",null,new { @class= "btn btn-info", @style= "btn btn-info"} )
+
+@{
+    TempData.Keep("PgNm");
+}

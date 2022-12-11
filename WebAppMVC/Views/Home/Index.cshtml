@@ -1,4 +1,4 @@
-﻿@model List<WebAppMVC.Models.FoodItem>
+﻿@model IEnumerable<WebAppMVC.Models.FoodItem>
 @{
     ViewData["Title"] = "Home Page : Foods";
 }
@@ -6,14 +6,12 @@
     <h2>Welcome as @ViewBag.Title</h2>
 </div>
 <div class="container">
-   
-     
         <div class="form-group">
         <form asp-controller="Home" asp-action="Find" method="post">
             <!-- Input and Submit elements -->
             @Html.Label("Find")
-            <input type="text" name="txtFind" asp-for="@TempData["txtFind"]" />
-            <input type="submit" value="Find" asp-action="Find" asp-controller="Home" onclick="GiveSearch()" />
+            <input type="text" name="txtFind"  /> <!--Bind txtFind with Action Find(string txtFind) parameter using name attribute in input element-->
+            <input type="submit" value="Find" asp-action="Find" asp-controller="Home" />
            @* <a class="btn btn-outline-info" asp-controller="Home" asp-action="Find" onclick="return confirm('Are sure wants to delete?');">Find</a>*@
 
         </form>
@@ -21,8 +19,14 @@
     <table id="Foods" class="table table-borderd table-responsive-md table-hover">
         <tr>
             <td class="form-group align-content-center">ID</td>
-            <td class="form-group align-content-center">Food Name</td>
-            <td class="form-group align-content-center">Description</td>
+
+            <td class="form-group align-content-center">
+                @Html.ActionLink("Name","Index","Home",new{SortCol="Name"} )
+                </td>
+            <td class="form-group align-content-center">
+                @Html.ActionLink("Description","Index","Home",new{SortCol="Description"} )
+                
+            </td>
             <td class="form-group align-content-center">Category</td>
             <td class="form-group align-content-center">Controls</td>
 
@@ -42,6 +46,7 @@
                     <td class="form-group align-content-center">
                         <div>
                         @Html.ActionLink("Details","Details","Home",new{Id = ddd.FoodId},new { @class= "btn btn-info", @style= "btn btn-info"} )
+                        
                         @Html.ActionLink("Edit","Edit","Home",new{Id = ddd.FoodId},new { @class= "btn btn-outline-primary", @style= "btn btn-outline-primary"} )
                         <a class="btn btn-outline-danger" asp-controller="Home" asp-action="Delete" asp-route-id="@ddd.FoodId" onclick="return confirm('Are sure wants to delete?');">Delete</a>
                         </div>
@@ -50,7 +55,12 @@
 
             }
     </table>
-      
+ 
+    @Html.ActionLink("Previous","PreviousPage","Home",null,new { @class= "btn btn-info", @style= "btn btn-info"} )
+    @Html.ActionLink("Next","NextPage","Home",null,new { @class= "btn btn-info", @style= "btn btn-info"} )
+    @{
+        TempData.Keep("PgNm");
+    }
 </div>
     
 

@@ -1,0 +1,44 @@
+﻿@model List<WebAppMVC.Models.Category>
+
+@{
+    ViewData["Title"] = "Find";
+}
+
+<h1>Find</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="alert-info">
+    Result : @Model.Count
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Category
+            </th>
+            <th>
+                Description
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CatName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CatId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CatId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CatId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

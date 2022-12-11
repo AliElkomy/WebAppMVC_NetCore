@@ -32,16 +32,17 @@
                     @Html.DisplayFor(model => d.Description)
                 </td>
             </tr>
-            <tr>
-                <td width="20%">
+            <tr style="height:2px;border-bottom:2px solid blue;">
+             @*   <td width="20%" >
                     @Html.DisplayNameFor(model => d.FoodCategoryId)
-                </td>
-                <td width="80%">
+                </td>*@
+                <td colspan="2" style="text-align:center;" >
                     <select id="FoodCat" class="btn btn-outline-info" asp-items=@ViewBag.Options asp-for=@d.FoodCategoryId></select>
                     <a asp-action="Edit" asp-route-id="@d.FoodId" class="btn btn-outline-primary">Edit</a>
                 </td>
            
             </tr>
+          
         </table>
     }
     </div>

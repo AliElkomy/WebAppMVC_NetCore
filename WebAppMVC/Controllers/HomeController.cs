@@ -20,6 +20,8 @@ namespace WebAppMVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly FoodContext _foodContext;
 
+        public int CurPage = 1 ;
+        
         public static bool ContainsAllItems(IList<FoodItem> listA, IList<FoodItem> listB)
         {
             return !listB.Except(listA).Any();
@@ -86,20 +88,53 @@ namespace WebAppMVC.Controllers
             {
                 dd.Add(new vwFoodItemCat { Id = c.id, Name = c.Name, Description = c.Description, Category = c.Category });
             }
+            _logger.Log(LogLevel.Information, "Get All Items "); 
             return dd;
         }
-        public IActionResult Index()
+        public IActionResult Index(string SortCol)
         {
-            TempData["txtFind"] = "";
+            CurPage = 1;
+            //TempData["txtFind"] = "";
+            TempData["PgNm"] = 1;
             Seed_Category();
             Seed_Food();
+            if (SortCol == "" || SortCol == null)
+            {
+                SortCol = "Name";
+            }
+            ViewBag.SortCol = SortCol; // "Name";
             //var dd = GetAllItems();
-            var dd = _foodContext.FoodItems.ToList();
+            //var dd = from d in  _foodContext.FoodItems select d;
+
+            var dd = _foodContext.FoodItems.FromSqlRaw ("exec pgOfTbl 'FoodItems','" +  SortCol + "',5,"+ CurPage.ToString()).ToList();
+            //dd = dd.OrderBy(b => b.Name);
             //FoodItem FD = new FoodItem();
             //FD.CategoryList = new SelectList(_foodContext.Categories.ToList(), "CatId", "CatName");
             FillCategoryDD();
+            _logger.Log(LogLevel.Information, "Get Items Page " , CurPage.ToString());
             return View(dd);
+            
+        }
+        public IActionResult NextPage() 
+        {
+            bool canNext = ( _foodContext.FoodItems.Count() > 5 * int.Parse(TempData["PgNm"].ToString())) ?true:false;
+            if(canNext)
+            { TempData["PgNm"] = int.Parse(TempData["PgNm"].ToString()) + 1; }
            
+            CurPage = int.Parse(TempData["PgNm"].ToString());
+            var dd = _foodContext.FoodItems.FromSqlRaw("exec pgOfTbl 'FoodItems','Name',5," + CurPage.ToString()).ToList();
+            FillCategoryDD();
+            return View("index",dd);
+        }
+        public IActionResult PreviousPage()
+        {
+            if(int.Parse(TempData["PgNm"].ToString()) > 1)
+            { TempData["PgNm"] = int.Parse(TempData["PgNm"].ToString()) - 1; }
+            
+            CurPage = int.Parse(TempData["PgNm"].ToString());
+            var dd = _foodContext.FoodItems.FromSqlRaw("exec pgOfTbl 'FoodItems','Name',5," + CurPage.ToString()).ToList();
+            FillCategoryDD();
+            return View("index", dd);
         }
 
         public IActionResult Privacy()
@@ -122,14 +157,14 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         public IActionResult SaveFood(FoodItem food)
         {
-            ViewBag.ErrMsg = false;
+            TempData["ErrMsg"] = "F";
 
             if (food.Name == null) 
             {
-                ViewBag.ErrMsg = true;
+                TempData["ErrMsg"] = "T";
 
                 FillCategoryDD();
-                TempData["SuccessMsg"] = "Correct Missing Data";
+                TempData["ErrorMsg"] = "Enter Missing data";
                 return View("AddFoodItem");
             }
 
@@ -190,7 +225,8 @@ namespace WebAppMVC.Controllers
             RepoFood repoFood = new RepoFood(_foodContext);
             repoFood.DeleteFoodItem(id);
             //RedirectToAction("Index",new { Model = GetAllItems() });
-            return View("index",GetAllItems());
+            var dd = _foodContext.FoodItems.ToList();
+            return View("index",dd);
         }
 
         [HttpPost]
